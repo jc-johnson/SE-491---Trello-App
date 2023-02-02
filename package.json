@@ -1,0 +1,23 @@
+{
+  "name": "se-491---trello-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "sum.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jc-johnson/SE-491---Trello-App.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jc-johnson/SE-491---Trello-App/issues"
+  },
+  "homepage": "https://github.com/jc-johnson/SE-491---Trello-App#readme",
+  "devDependencies": {
+    "jest": "^29.4.1"
+  }
+}
