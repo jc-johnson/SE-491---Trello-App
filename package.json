@@ -1,9 +1,11 @@
 {
   "name": "se-491---trello-app",
+  "source": "src/index.html",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
+    "start": "parcel", 
+    "build": "parcel build",
     "test": "jest"
   },
   "repository": {
