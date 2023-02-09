@@ -8,6 +8,10 @@
     "build": "parcel build",
     "test": "jest"
   },
+  "engines" : { 
+    "npm" : ">=8.19.3",
+    "node" : ">=18.13.0"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jc-johnson/SE-491---Trello-App.git"
