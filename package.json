@@ -1,6 +1,6 @@
 {
   "name": "se-491---trello-app",
-  "source": "src/index.html",
+  "source": "index.html",
   "version": "1.0.0",
   "description": "",
   "scripts": {
