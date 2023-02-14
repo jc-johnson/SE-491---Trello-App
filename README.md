@@ -1,7 +1,11 @@
 # SE-491---Trello-App
 
-# npm init -y
+This is our team's repo for the SE 491 Trello Power Up 
 
-# npm i --save-dev jest
+# Steps to set up Jest for testing 
 
-# npm run test
+npm init -y
+
+npm i --save-dev jest
+
+npm run test
