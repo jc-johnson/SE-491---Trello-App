@@ -124,6 +124,7 @@
       async function listUpcomingEvents() {
         let response;
         try {
+          //put parameters in the request https://developers.google.com/calendar/api/v3/reference/events/list#python
           const request = {
             'calendarId': 'primary',
             'timeMin': (new Date()).toISOString(),
@@ -137,7 +138,7 @@
           document.getElementById('content').innerText = err.message;
           return;
         }
-
+        //check response for which part to use https://developers.google.com/calendar/api/v3/reference/events/list#python
         const events = response.result.items;
         if (!events || events.length == 0) {
           document.getElementById('content').innerText = 'No events found.';
