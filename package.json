@@ -1,0 +1,30 @@
+{
+  "name": "se-491---trello-app",
+  "source": "index.html",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "start": "parcel", 
+    "build": "parcel build",
+    "test": "jest"
+  },
+  "engines" : { 
+    "npm" : ">=8.19.3",
+    "node" : ">=18.13.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jc-johnson/SE-491---Trello-App.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jc-johnson/SE-491---Trello-App/issues"
+  },
+  "homepage": "https://github.com/jc-johnson/SE-491---Trello-App#readme",
+  "devDependencies": {
+    "jest": "^29.4.1",
+    "parcel": "^2.8.3"
+  }
+}
