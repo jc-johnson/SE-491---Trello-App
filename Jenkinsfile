@@ -16,7 +16,11 @@ pipeline {
 					
 			steps {
 				echo 'Installing npm...'
-				sh 'npm config ls'
+				nodejs(NodeInstance: 'node19') {
+      				sh 'npm -v'  
+      				sh 'node -v'
+					sh 'npm test'
+    			}
 			}
 		}
 				
