@@ -2,6 +2,11 @@ var GLITCH_ICON = 'https://cdn.glitch.com/2442c68d-7b6d-4b69-9d13-feab530aa88e%2
 var GRAY_ICON = 'https://cdn.hyperdev.com/us-east-1%3A3d31b21c-01a0-4da2-8827-4bc6e88b7618%2Ficon-gray.svg';
 var WHITE_ICON = 'https://cdn.hyperdev.com/us-east-1%3A3d31b21c-01a0-4da2-8827-4bc6e88b7618%2Ficon-white.svg';
 
+var WHITE_ICON = 'https://cdn.hyperdev.com/us-east-1%3A3d31b21c-01a0-4da2-8827-4bc6e88b7618%2Ficon-white.svg';
+var BLACK_ICON = 'https://cdn.hyperdev.com/us-east-1%3A3d31b21c-01a0-4da2-8827-4bc6e88b7618%2Ficon-black.svg';
+
+
+
 var boardButtonCallback = function(t){
   return t.popup({
     title: 'Popup List Example',
@@ -57,6 +62,10 @@ var boardButtonCallback = function(t){
   });
 };
 
+var onBtnClick = function (t, opts) {
+  console.log('Someone clicked the button');
+};
+
 TrelloPowerUp.initialize({
   'card-buttons': function (t, opts) {
     return [{
@@ -70,20 +79,27 @@ TrelloPowerUp.initialize({
       condition: 'always'
     }];
   },
-  'board-buttons': function(t, options){
+  'board-buttons': function (t, opts) {
     return [{
       // we can either provide a button that has a callback function
-      // that callback function should probably open a popup, overlay, or boardBar
-      icon: WHITE_ICON,
-      text: 'Popup',
-      callback: boardButtonCallback
+      icon: {
+        dark: WHITE_ICON,
+        light: BLACK_ICON
+      },
+      text: 'Callback',
+      callback: onBtnClick,
+      condition: 'edit'
     }, {
       // or we can also have a button that is just a simple url
       // clicking it will open a new tab at the provided url
-      icon: WHITE_ICON,
+      icon: {
+        dark: WHITE_ICON,
+        light: BLACK_ICON
+      },
       text: 'URL',
+      condition: 'always',
       url: 'https://trello.com/inspiration',
       target: 'Inspiring Boards' // optional target for above url
     }];
-  },
+  }
 });
