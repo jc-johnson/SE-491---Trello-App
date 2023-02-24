@@ -1,8 +1,6 @@
 pipeline {
 
 	agent any
-
-	tools {nodejs "nodejs"}
 	
 	stages {
 
@@ -19,7 +17,6 @@ pipeline {
 			steps {
 				echo 'Installing npm...'
 				sh 'npm config ls'
-				echo 'Installing npm...'
 			}
 		}
 				
