@@ -50,7 +50,7 @@ var boardButtonCallback = function(t){
         text: 'Open Board Bar',
         callback: function(t){
           return t.boardBar({
-            url: './board-bar.html',
+            url: '../html/board-bar.html',
             height: 200
           })
           .then(function(){
@@ -79,8 +79,21 @@ TrelloPowerUp.initialize({
       condition: 'always'
     }];
   },
-  'board-buttons': function (t, opts) {
+  'board-buttons': function(t, options){
     return [{
+      // we can either provide a button that has a callback function
+      // that callback function should probably open a popup, overlay, or boardBar
+      icon: WHITE_ICON,
+      text: 'Popup',
+      callback: boardButtonCallback
+    }, {
+      // or we can also have a button that is just a simple url
+      // clicking it will open a new tab at the provided url
+      icon: WHITE_ICON,
+      text: 'URL',
+      url: 'https://trello.com/inspiration',
+      target: 'Inspiring Boards' // optional target for above url
+    }, {
       // we can either provide a button that has a callback function
       icon: {
         dark: WHITE_ICON,
@@ -89,17 +102,6 @@ TrelloPowerUp.initialize({
       text: 'Callback',
       callback: onBtnClick,
       condition: 'edit'
-    }, {
-      // or we can also have a button that is just a simple url
-      // clicking it will open a new tab at the provided url
-      icon: {
-        dark: WHITE_ICON,
-        light: BLACK_ICON
-      },
-      text: 'URL',
-      condition: 'always',
-      url: 'https://trello.com/inspiration',
-      target: 'Inspiring Boards' // optional target for above url
     }];
-  }
+  },
 });
