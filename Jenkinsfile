@@ -4,10 +4,19 @@ pipeline {
 	
 	stages {
 
-		stage(“build”) {
+		stage(“clone”) {
 					
 			steps {
-				echo 'building the application...'
+				echo 'Cloning from git'
+				git 'https://github.com/jc-johnson/SE-491---Trello-App.git'
+			}
+		}
+				
+		stage(“install”) {
+					
+			steps {
+				echo 'Installing npm...'
+				sh 'npm install'
 			}
 		}
 				
@@ -15,13 +24,7 @@ pipeline {
 					
 			steps {
 				echo 'testing the application...'
-			}
-		}
-				
-		stage(“deploy”) {
-					
-			steps {
-				echo 'deploying the application...'
+				sh 'npm test'
 			}
 		}
 	}
