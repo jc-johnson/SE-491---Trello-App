@@ -95,10 +95,7 @@ TrelloPowerUp.initialize({
       target: 'Inspiring Boards' // optional target for above url
     }, {
       // we can either provide a button that has a callback function
-      icon: {
-        dark: WHITE_ICON,
-        light: BLACK_ICON
-      },
+      icon: BLACK_ICON,
       text: 'Callback',
       callback: onBtnClick,
       condition: 'edit'
