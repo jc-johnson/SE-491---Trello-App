@@ -7,30 +7,7 @@
   </head>
   <body>
     <script src="https://p.trellocdn.com/power-up.min.js" crossorigin="anonymous"></script>
-    <script>
-      window.TrelloPowerUp.initialize({
-        'board-buttons': function (t, opts) {
-          return t.cards('all').then(function (cards) {
-            console.log(JSON.stringify(cards, null, 2));
-          });
-        },
-      });
-
-      window.TrelloPowerUp.initialize({
-        'card-buttons': function (t, opts) {
-          return [{
-            icon: 'https://cdn.hyperdev.com/us-east-1%3A3d31b21c-01a0-4da2-8827-4bc6e88b7618%2Ficon-gray.svg',
-            text: 'Open Popup',
-            callback: function(t) {
-                t.alert({
-                  message: 'Hello World!'
-                })
-            },
-            condition: 'always'
-          }];
-        }
-      });
-    </script> 
+    <script src="src/js/client.js">   </script> 
     <h1>Hello, World!</h1>
   </body>
 </html>
