@@ -8,7 +8,7 @@ pipeline {
 					
 			steps {
 				echo 'Cloning from git'
-				git 'https://github.com/jc-johnson/SE-491---Trello-App.git'
+				checkout([$class: 'GitSCM', branches: [[name: '*/main']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/jc-johnson/SE-491---Trello-App.git']]])
 			}
 		}
 				
