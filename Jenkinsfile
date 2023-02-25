@@ -15,8 +15,9 @@ pipeline {
 		stage(“install”) {
 					
 			steps {
-				echo 'Installing npm...'
-				sh 'npm install'
+				nodejs(NodeInstance: 'Node 18.x') {
+                    			sh 'npm config ls'
+                		}
 			}
 		}
 				
