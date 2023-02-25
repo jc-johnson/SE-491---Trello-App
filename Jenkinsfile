@@ -12,7 +12,7 @@ pipeline {
 			}
 		}
 				
-		stage(“install”) {
+		stage(“config”) {
 				
 			steps {
 				nodejs(nodeJSInstallationName: 'NodeInstance') {
