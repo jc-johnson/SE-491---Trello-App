@@ -14,7 +14,7 @@ var boardButtonCallback = function(t){
         text: 'Open Modal',
         callback: function(t){
           return t.modal({            
-            url: '../html/modal.html', // The URL to load for the iframe
+            url: 'src/html/modal.html', // The URL to load for the iframe
             args: { text: 'Hello' }, // Optional args to access later with t.arg('text') on './modal.html'
             accentColor: '#F2D600', // Optional color for the modal header 
             height: 500, // Initial height for iframe; not used if fullscreen is true
