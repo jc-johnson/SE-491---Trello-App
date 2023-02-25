@@ -49,7 +49,7 @@ var boardButtonCallback = function(t){
         text: 'Open Board Bar',
         callback: function(t){
           return t.boardBar({
-            url: '../html/board-bar.html',
+            url: 'src/html/board-bar.html',
             height: 200
           })
           .then(function(){
