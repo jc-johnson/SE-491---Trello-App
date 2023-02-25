@@ -31,7 +31,7 @@ var boardButtonCallback = function(t){
               icon: GRAY_ICON,
               callback: (tr) => tr.popup({ // Callback to be called when user clicks the action button.
                 title: 'Settings',
-                url: '../html/settings.html',
+                url: 'src/html/settings.html',
                 height: 164,
               }),
               alt: 'Second from left',
