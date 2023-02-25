@@ -24,7 +24,7 @@ var boardButtonCallback = function(t){
             // You can add up to 3 action buttons on the modal header - max 1 on the right side.
             actions: [{
               icon: GRAY_ICON,
-              url: 'https://google.com', // Opens the URL passed to it.
+              url: 'https://depaul.edu', // Opens the URL passed to it.
               alt: 'Leftmost',
               position: 'left',
             }, {
