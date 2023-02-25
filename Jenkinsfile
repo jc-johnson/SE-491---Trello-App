@@ -13,7 +13,7 @@ pipeline {
 		}
 				
 		stage(“install”) {
-					
+				
 			steps {
 				nodejs(nodeJSInstallationName: 'NodeInstance') {
                     			sh 'npm config ls'
@@ -25,7 +25,9 @@ pipeline {
 					
 			steps {
 				echo 'testing the application...'
-				sh 'npm test'
+				nodejs(nodeJSInstallationName: 'NodeInstance') {
+                    			sh 'npm test'
+                		}
 			}
 		}
 	}
