@@ -15,7 +15,7 @@ pipeline {
 		stage(“install”) {
 					
 			steps {
-				nodejs(NodeInstance: 'Node 18.x') {
+				nodejs(NodeInstance: 'Node 18.x', configId: '<config-file-provider-id>') {
                     			sh 'npm config ls'
                 		}
 			}
