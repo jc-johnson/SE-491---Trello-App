@@ -1,8 +1,6 @@
 pipeline {
 
 	agent any
-
-	tools {nodejs "node"}
 	
 	stages {
 
@@ -15,10 +13,11 @@ pipeline {
 		}
 				
 		stage(“install”) {
-					
+				
 			steps {
-				echo 'Installing npm...'
-				sh 'npm install'
+				nodejs(nodeJSInstallationName: 'NodeInstance') {
+                    			sh 'npm config ls'
+                		}
 			}
 		}
 				
@@ -26,7 +25,9 @@ pipeline {
 					
 			steps {
 				echo 'testing the application...'
-				sh 'npm test'
+				nodejs(nodeJSInstallationName: 'NodeInstance') {
+                    			sh 'npm test'
+                		}
 			}
 		}
 	}
