@@ -65,17 +65,17 @@ var onBtnClick = function (t, opts) {
   })
 };
 
-var onOauthClick = function handleAuthClick() {
+var onOauthClick = function handleAuthClick(t) {
   tokenClient.callback = async (resp) => {
     if (resp.error !== undefined) {
       console.log('login error');
-      window.TrelloPowerUp.iframe().alert({
+      t.alert({
           message: 'google login error'
       });
       throw (resp);
     }
     console.log('login success');
-    window.TrelloPowerUp.iframe().alert({
+    t.alert({
       message: 'google login success'
     }); 
     isOauth = true;
