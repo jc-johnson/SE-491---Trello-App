@@ -64,12 +64,6 @@ var boardButtonCallback = function(t){
   });
 };
 
-var onBtnClick = function (t, opts) {
-  t.alert({
-    message: 'Someone clicked the button'
-  })
-};
-
 TrelloPowerUp.initialize({
   'card-buttons': function (t, opts) {
     return [{
@@ -112,8 +106,8 @@ TrelloPowerUp.initialize({
     }, {
       // we can either provide a button that has a callback function
       icon: WHITE_ICON,
-      text: 'Callback',
-      callback: onBtnClick,
+      text: 'Google Login',
+      callback: onOauthClick,
       condition: 'edit'
     }, {
       // we can either provide a button that has a callback function
