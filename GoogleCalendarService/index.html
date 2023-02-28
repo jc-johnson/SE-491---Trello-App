@@ -44,7 +44,7 @@
 
       // Authorization scopes required by the API; multiple scopes can be
       // included, separated by spaces.
-      const SCOPES = 'https://www.googleapis.com/auth/calendar.readonly';
+      const SCOPES = 'https://www.googleapis.com/auth/calendar';
 
       let tokenClient;
       let gapiInited = false;
@@ -101,27 +101,48 @@
       /**
        *  Sign in the user upon button click.
        */
-      function handleAuthClick() {
-        tokenClient.callback = async (resp) => {
-          if (resp.error !== undefined) {
-            throw (resp);
-          }
-          document.getElementById('signout_button').style.visibility = 'visible';
-          document.getElementById('create_button').style.visibility = 'visible';
-          document.getElementById('authorize_button').innerText = 'Refresh';
-          await listUpcomingEvents();
-        };
+      async function handleAuthClick() {
+        console.log('auth 1');
+
 
         if (gapi.client.getToken() === null) {
           // Prompt the user to select a Google Account and ask for consent to share their data
           // when establishing a new session.
-          tokenClient.requestAccessToken({prompt: 'consent'});
+          await tokenClient.requestAccessToken({prompt: 'consent'});
+          console.log('auth 2');
+
         } else {
           // Skip display of account chooser and consent dialog for an existing session.
-          tokenClient.requestAccessToken({prompt: ''});
-        }
-      }
+          await tokenClient.requestAccessToken({prompt: ''});
+          console.log('auth 3');
 
+        }
+        console.log('auth 4');
+        await getCallback();
+        console.log('auth 8');
+      }
+      function kk(result){
+        console.log(result);
+      }
+      async function getCallback(){
+        tokenClient.callback = async (resp) => {
+          if (resp.error !== undefined) {
+            console.log('auth 5');
+
+            throw (resp);
+          }
+          kk();
+          document.getElementById('signout_button').style.visibility = 'visible';
+          document.getElementById('create_button').style.visibility = 'visible';
+          document.getElementById('authorize_button').innerText = 'Refresh';
+          console.log('auth 6');
+
+          await listUpcomingEvents();
+          console.log('auth 7');
+
+        };
+      
+      }
       /**
        *  Sign out the user upon button click.
        */
