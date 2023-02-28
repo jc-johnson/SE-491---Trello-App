@@ -65,6 +65,29 @@ var onBtnClick = function (t, opts) {
   })
 };
 
+var onOauthClick = function handleAuthClick(t) {
+  tokenClient.callback = async (resp) => {
+    if (resp.error !== undefined) {
+      console.log('login error');
+      t.card().then(card => alert('google login error'));
+      throw (resp);
+
+    }
+    console.log('login success');
+    t.card().then(card => alert('login success'));
+    isOauth = true;
+  };
+
+  if (gapi.client.getToken() === null) {
+    // Prompt the user to select a Google Account and ask for consent to share their data
+    // when establishing a new session.
+    tokenClient.requestAccessToken({prompt: 'consent'});
+  } else {
+    // Skip display of account chooser and consent dialog for an existing session.
+    tokenClient.requestAccessToken({prompt: ''});
+  }
+}
+
 TrelloPowerUp.initialize({
   'card-buttons': function (t, opts) {
     return [{
@@ -79,20 +102,19 @@ TrelloPowerUp.initialize({
     }, {
       // but of course, you could also just kick off to a url if that's your thing
       icon: GRAY_ICON,
-      text: 'google login',
+      text: 'google state check',
       condition: 'always',
       callback: function(t) {
         t.alert({
-          message: isOauthLoad + " " + isOauth
+          message: 'Is Oauth loaded: '+isOauthLoad + "\nIs Logged: " + isOauth
         })
       }
     }, {
       // but of course, you could also just kick off to a url if that's your thing
       icon: GRAY_ICON,
-      text: 'get calendar event list',
+      text: 'Google Login',
       condition: 'always',
-      url: 'https://developer.atlassian.com/cloud/trello',
-      target: 'Trello Developer Site' // optional target for above url
+      callback: onOauthClick
     }];
   },
   // 'board-buttons': function(t, options){
