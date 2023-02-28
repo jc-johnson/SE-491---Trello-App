@@ -1,9 +1,7 @@
-var GLITCH_ICON = 'https://cdn.glitch.com/2442c68d-7b6d-4b69-9d13-feab530aa88e%2Fglitch-icon.svg?1489773457908';
-var GRAY_ICON = 'https://cdn.hyperdev.com/us-east-1%3A3d31b21c-01a0-4da2-8827-4bc6e88b7618%2Ficon-gray.svg';
-var WHITE_ICON = 'https://cdn.hyperdev.com/us-east-1%3A3d31b21c-01a0-4da2-8827-4bc6e88b7618%2Ficon-white.svg';
-
-var WHITE_ICON = 'https://cdn.hyperdev.com/us-east-1%3A3d31b21c-01a0-4da2-8827-4bc6e88b7618%2Ficon-white.svg';
-var BLACK_ICON = 'https://cdn.hyperdev.com/us-east-1%3A3d31b21c-01a0-4da2-8827-4bc6e88b7618%2Ficon-black.svg';
+const GLITCH_ICON = 'https://cdn.glitch.com/2442c68d-7b6d-4b69-9d13-feab530aa88e%2Fglitch-icon.svg?1489773457908';
+const GRAY_ICON = 'https://cdn.hyperdev.com/us-east-1%3A3d31b21c-01a0-4da2-8827-4bc6e88b7618%2Ficon-gray.svg';
+const WHITE_ICON = 'https://cdn.hyperdev.com/us-east-1%3A3d31b21c-01a0-4da2-8827-4bc6e88b7618%2Ficon-white.svg';
+const BLACK_ICON = 'https://cdn.hyperdev.com/us-east-1%3A3d31b21c-01a0-4da2-8827-4bc6e88b7618%2Ficon-black.svg';
 
 
 var boardButtonCallback = function(t){
@@ -78,28 +76,53 @@ TrelloPowerUp.initialize({
           })
       },
       condition: 'always'
+    }, {
+      // but of course, you could also just kick off to a url if that's your thing
+      icon: GRAY_ICON,
+      text: 'get calendar event list',
+      condition: 'always',
+      url: 'https://developer.atlassian.com/cloud/trello',
+      target: 'Trello Developer Site' // optional target for above url
     }];
   },
-  'board-buttons': function(t, options){
-    return [{
-      // we can either provide a button that has a callback function
-      // that callback function should probably open a popup, overlay, or boardBar
-      icon: WHITE_ICON,
-      text: 'Popup',
-      callback: boardButtonCallback
-    }, {
-      // or we can also have a button that is just a simple url
-      // clicking it will open a new tab at the provided url
-      icon: WHITE_ICON,
-      text: 'URL',
-      url: 'https://trello.com/inspiration',
-      target: 'Inspiring Boards' // optional target for above url
-    }, {
-      // we can either provide a button that has a callback function
-      icon: WHITE_ICON,
-      text: 'Callback',
-      callback: onBtnClick,
-      condition: 'edit'
-    }];
+  // 'board-buttons': function(t, options){
+  //   return [{
+  //     // we can either provide a button that has a callback function
+  //     // that callback function should probably open a popup, overlay, or boardBar
+  //     icon: WHITE_ICON,
+  //     text: 'Popup',
+  //     callback: boardButtonCallback
+  //   }, {
+  //     // or we can also have a button that is just a simple url
+  //     // clicking it will open a new tab at the provided url
+  //     icon: WHITE_ICON,
+  //     text: 'URL',
+  //     url: 'https://trello.com/inspiration',
+  //     target: 'Inspiring Boards' // optional target for above url
+  //   }, {
+  //     // we can either provide a button that has a callback function
+  //     icon: WHITE_ICON,
+  //     text: 'Callback',
+  //     callback: onBtnClick,
+  //     condition: 'edit'
+  //   }];
+  // },
+  'show-authorization': function(t, options){
+    // return what to do when a user clicks the 'Authorize Account' link
+    // from the Power-Up gear icon which shows when 'authorization-status'
+    // returns { authorized: false }
+    // in this case we would open a popup
+    return t.popup({
+      title: 'Google Oauth2 Popup',
+      url: './src/html/Oauth2.html',
+      height: 140,
+    });
   },
+  'authorization-status': function(t, options){
+    // return a promise that resolves to the object with
+    // a property 'authorized' being true/false
+    // you can also return the object synchronously if you know
+    // the answer synchronously
+    return new TrelloPowerUp.Promise((resolve) => resolve({ authorized: isOauth }));
+  }
 });
