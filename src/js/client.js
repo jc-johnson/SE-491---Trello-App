@@ -65,8 +65,6 @@ var onBtnClick = function (t, opts) {
   })
 };
 
-var onOauthClick = handleAuthClick();
-
 TrelloPowerUp.initialize({
   'card-buttons': function (t, opts) {
     return [{
@@ -93,7 +91,7 @@ TrelloPowerUp.initialize({
       icon: GRAY_ICON,
       text: 'Google Login',
       condition: 'always',
-      callback: onOauthClick
+      callback: handleAuthClick()
     }];
   },
   // 'board-buttons': function(t, options){
