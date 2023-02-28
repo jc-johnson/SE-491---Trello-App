@@ -69,12 +69,16 @@ var onOauthClick = function handleAuthClick(t) {
   tokenClient.callback = async (resp) => {
     if (resp.error !== undefined) {
       console.log('login error');
-      t.card().then(card => alert('google login error'));
+      t.alert({
+        message: 'google login error'
+      })
       throw (resp);
 
     }
     console.log('login success');
-    t.card().then(card => alert('login success'));
+    t.alert({
+      message: 'google login success'
+    })
     isOauth = true;
   };
 
