@@ -160,7 +160,7 @@ var onEventListClick = async function googleCalendarEventList(t) {
     //put parameters in the request https://developers.google.com/calendar/api/v3/reference/events/list#python
     const request = {
       'calendarId': 'primary',
-      // 'timeMin': (new Date()).toISOString(),
+      'timeMin': (new Date()).toISOString(),  //enable to only list future events
       'showDeleted': false,
       'singleEvents': true,
       'maxResults': 2,
