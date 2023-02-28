@@ -3,6 +3,11 @@ const GRAY_ICON = 'https://cdn.hyperdev.com/us-east-1%3A3d31b21c-01a0-4da2-8827-
 const WHITE_ICON = 'https://cdn.hyperdev.com/us-east-1%3A3d31b21c-01a0-4da2-8827-4bc6e88b7618%2Ficon-white.svg';
 const BLACK_ICON = 'https://cdn.hyperdev.com/us-east-1%3A3d31b21c-01a0-4da2-8827-4bc6e88b7618%2Ficon-black.svg';
 
+function trelloAlert(t,alertMsg){
+  t.alert({
+    message: alertMsg
+  });
+}
 
 var boardButtonCallback = function(t){
   return t.popup({
@@ -65,19 +70,73 @@ var onBtnClick = function (t, opts) {
   })
 };
 
+TrelloPowerUp.initialize({
+  'card-buttons': function (t, opts) {
+    return [{
+      icon: GRAY_ICON,
+      text: 'Open Popup Sample (Hello World)',
+      callback: function(t) {
+        trelloAlert(t,'Hello World!');
+      },
+      condition: 'always'
+    }, {
+      // but of course, you could also just kick off to a url if that's your thing
+      icon: GRAY_ICON,
+      text: 'google state check',
+      condition: 'always',
+      callback: function(t) {
+        trelloAlert(t,'Is Oauth loaded: '+isOauthLoad + "\nIs Logged: " + isOauth);
+      }
+    }, {
+      // but of course, you could also just kick off to a url if that's your thing
+      icon: GRAY_ICON,
+      text: 'Google Login',
+      condition: 'always',
+      callback: onOauthClick
+    }];
+  },
+  'board-buttons': function(t, options){
+    return [{
+      // we can either provide a button that has a callback function
+      // that callback function should probably open a popup, overlay, or boardBar
+      icon: WHITE_ICON,
+      text: 'Popup',
+      callback: boardButtonCallback
+    }, {
+      // or we can also have a button that is just a simple url
+      // clicking it will open a new tab at the provided url
+      icon: WHITE_ICON,
+      text: 'URL',
+      url: 'https://trello.com/inspiration',
+      target: 'Inspiring Boards' // optional target for above url
+    }, {
+      // we can either provide a button that has a callback function
+      icon: WHITE_ICON,
+      text: 'Callback',
+      callback: onBtnClick,
+      condition: 'edit'
+    }, {
+      // we can either provide a button that has a callback function
+      icon: WHITE_ICON,
+      text: 'Show Future Events',
+      callback: onEventListClick,
+      condition: 'edit'
+    }];
+  },
+});
+
+
+
+//Google Stuff
 var onOauthClick = function handleAuthClick(t) {
   tokenClient.callback = async (resp) => {
     if (resp.error !== undefined) {
       console.log('login error');
-      t.alert({
-          message: 'google login error'
-      });
+      trelloAlert(t,'google login error');
       throw (resp);
     }
     console.log('login success');
-    t.alert({
-      message: 'google login success'
-    }); 
+    trelloAlert(t,'google login success');
     isOauth = true;
   };
 
@@ -91,56 +150,103 @@ var onOauthClick = function handleAuthClick(t) {
   }
 }
 
-TrelloPowerUp.initialize({
-  'card-buttons': function (t, opts) {
-    return [{
-      icon: GRAY_ICON,
-      text: 'Open Popup Feng',
-      callback: function(t) {
-          t.alert({
-            message: 'Hello World!'
-          })
-      },
-      condition: 'always'
-    }, {
-      // but of course, you could also just kick off to a url if that's your thing
-      icon: GRAY_ICON,
-      text: 'google state check',
-      condition: 'always',
-      callback: function(t) {
-        t.alert({
-          message: 'Is Oauth loaded: '+isOauthLoad + "\nIs Logged: " + isOauth
-        })
-      }
-    }, {
-      // but of course, you could also just kick off to a url if that's your thing
-      icon: GRAY_ICON,
-      text: 'Google Login',
-      condition: 'always',
-      callback: onOauthClick
-    }];
-  },
-  // 'board-buttons': function(t, options){
-  //   return [{
-  //     // we can either provide a button that has a callback function
-  //     // that callback function should probably open a popup, overlay, or boardBar
-  //     icon: WHITE_ICON,
-  //     text: 'Popup',
-  //     callback: boardButtonCallback
-  //   }, {
-  //     // or we can also have a button that is just a simple url
-  //     // clicking it will open a new tab at the provided url
-  //     icon: WHITE_ICON,
-  //     text: 'URL',
-  //     url: 'https://trello.com/inspiration',
-  //     target: 'Inspiring Boards' // optional target for above url
-  //   }, {
-  //     // we can either provide a button that has a callback function
-  //     icon: WHITE_ICON,
-  //     text: 'Callback',
-  //     callback: onBtnClick,
-  //     condition: 'edit'
-  //   }];
-  // },
+var onEventListClick = async function googleCalendarEventList(t) {
+  if(!(isOauthLoad&&isOauth)){
+    trelloAlert(t,'Google account did not logged or Google service is not ready')
+    return;
+  }
+  let response;
+  try {
+    //put parameters in the request https://developers.google.com/calendar/api/v3/reference/events/list#python
+    const request = {
+      'calendarId': 'primary',
+      // 'timeMin': (new Date()).toISOString(),
+      'showDeleted': false,
+      'singleEvents': true,
+      'maxResults': 2,
+      'orderBy': 'startTime',
+    };
+    response = await gapi.client.calendar.events.list(request);
+  } catch (err) {
+    trelloAlert(t,err.message);
+    return;
+  }
+  //check response for which part to use https://developers.google.com/calendar/api/v3/reference/events/list#python
+  const events = response.result.items;
+  if (!events || events.length == 0) {
+    document.getElementById('content').innerText = 'No events found.';
+    return;
+  }
+  // Flatten to string to display
+  const output = events.reduce(
+      (str, event) => `${str}${event.summary} (${event.start.dateTime || event.start.date})\n`,
+      'Events:\n');
+  trelloAlert(t,output);
+}
 
-});
+async function googleCalendarEventCreate(a,b,c,d) {
+  console.log("CreateSubmit click")
+  console.log(!a?!a:a);
+  console.log(!b?!b:b);
+  if(!c){
+    if(d)
+      c = d;
+    else{
+      var currentdate = new Date(); 
+      // c = currentdate.toISOString().slice(0, -8)+':00.000Z';
+      c = currentdate.toISOString();
+    }
+  }
+  else c = new Date(Date.parse(c)).toISOString();
+  if(!d){
+    d = c;
+  }else d = new Date(Date.parse(d)).toISOString();
+
+  const e = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  console.log(!c?!c:c);
+  console.log(!d?!d:d);
+
+  console.log(e);
+  document.getElementById('create_event_form').style.display = 'none';
+  console.log("CreateSubmit click done")
+
+  let response;
+  try {
+    //put parameters in the request https://developers.google.com/calendar/api/v3/reference/events/list#python
+    const request = {
+      'calendarId': 'primary',
+      "summary": a,
+      "description": b,
+      "start": {
+        "dateTime": c,
+        "timeZone": e
+      },
+      "end": {
+        "dateTime":d,
+        "timeZone":e
+      },
+    };
+    response = await gapi.client.calendar.events.insert(request);
+  } catch (err) {
+    console.log(err);
+    document.getElementById('content').innerText = err.status;
+    return;
+  }
+  //check response for which part to use https://developers.google.com/calendar/api/v3/reference/events/list#python
+  const id = response.result.id;
+  console.log(response.result.id);
+  if (!id || id<=0) {
+    const error = response.result.error;
+    console.log(response.result.error);
+
+    if(!error)
+      document.getElementById('content').innerText = 'Error. No error code found.';
+    document.getElementById('content').innerText = 'Error. '+error.code+'\n'+error.message;
+    return;
+  }
+  // Flatten to string to display
+  const output = response.result.id+' '+response.result.summary+' '+response.result.description;
+  console.log(output);
+
+  document.getElementById('content').innerText = output;
+}
