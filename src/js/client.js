@@ -67,7 +67,6 @@ var onBtnClick = function (t, opts) {
 
 var onOauthClick = function handleAuthClick(t) {
   tokenClient.callback = async (resp) => {
-    console.log('check this');
     if (resp.error !== undefined) {
       console.log('login error');
       t.alert({
