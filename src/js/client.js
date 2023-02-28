@@ -160,10 +160,10 @@ var onEventListClick = async function googleCalendarEventList(t) {
     //put parameters in the request https://developers.google.com/calendar/api/v3/reference/events/list#python
     const request = {
       'calendarId': 'primary',
-      'timeMin': (new Date()).toISOString(),  //enable to only list future events
+      'timeMin': (new Date()).toISOString(),
       'showDeleted': false,
       'singleEvents': true,
-      'maxResults': 2,
+      'maxResults': 10,
       'orderBy': 'startTime',
     };
     response = await gapi.client.calendar.events.list(request);
