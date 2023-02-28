@@ -2,9 +2,15 @@ function handleAuthClick() {
     tokenClient.callback = async (resp) => {
       if (resp.error !== undefined) {
         console.log('login error');
+        window.TrelloPowerUp.iframe().alert({
+            message: 'google login error'
+        });
         throw (resp);
       }
       console.log('login success');
+      window.TrelloPowerUp.iframe().alert({
+        message: 'google login success'
+      }); 
       isOauth = true;
     };
 
@@ -25,4 +31,7 @@ function handleSignoutClick() {
         gapi.client.setToken('');
     }
     isOauth = false;
+    window.TrelloPowerUp.iframe().alert({
+        message: 'google login out'
+    });
 }
