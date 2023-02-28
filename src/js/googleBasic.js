@@ -28,6 +28,7 @@ function gisLoaded() {
 function maybeEnableButtons() {
     if (gapiInited && gisInited) {
       console.log('GIS load success.');
+      isOauthLoad = true;
     }
 }
 

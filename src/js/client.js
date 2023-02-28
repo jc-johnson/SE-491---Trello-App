@@ -68,14 +68,24 @@ var onBtnClick = function (t, opts) {
 TrelloPowerUp.initialize({
   'card-buttons': function (t, opts) {
     return [{
-      icon: 'https://cdn.hyperdev.com/us-east-1%3A3d31b21c-01a0-4da2-8827-4bc6e88b7618%2Ficon-gray.svg',
-      text: 'Open Popup',
+      icon: GRAY_ICON,
+      text: 'Open Popup Feng',
       callback: function(t) {
           t.alert({
             message: 'Hello World!'
           })
       },
       condition: 'always'
+    }, {
+      // but of course, you could also just kick off to a url if that's your thing
+      icon: GRAY_ICON,
+      text: 'google login',
+      condition: 'always',
+      callback: function(t) {
+        t.alert({
+          message: isOauthLoad + " " + isOauth
+        })
+      }
     }, {
       // but of course, you could also just kick off to a url if that's your thing
       icon: GRAY_ICON,
@@ -107,22 +117,5 @@ TrelloPowerUp.initialize({
   //     condition: 'edit'
   //   }];
   // },
-  // 'show-authorization': function(t, options){
-  //   // return what to do when a user clicks the 'Authorize Account' link
-  //   // from the Power-Up gear icon which shows when 'authorization-status'
-  //   // returns { authorized: false }
-  //   // in this case we would open a popup
-  //   return t.popup({
-  //     title: 'Google Oauth2 Popup',
-  //     url: './src/html/Oauth2.html',
-  //     height: 140,
-  //   });
-  // },
-  // 'authorization-status': function(t, options){
-  //   // return a promise that resolves to the object with
-  //   // a property 'authorized' being true/false
-  //   // you can also return the object synchronously if you know
-  //   // the answer synchronously
-  //   return new TrelloPowerUp.Promise((resolve) => resolve({ authorized: isOauth }));
-  // }
+
 });
