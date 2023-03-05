@@ -1,10 +1,13 @@
-var GLITCH_ICON = 'https://cdn.glitch.com/2442c68d-7b6d-4b69-9d13-feab530aa88e%2Fglitch-icon.svg?1489773457908';
-var GRAY_ICON = 'https://cdn.hyperdev.com/us-east-1%3A3d31b21c-01a0-4da2-8827-4bc6e88b7618%2Ficon-gray.svg';
-var WHITE_ICON = 'https://cdn.hyperdev.com/us-east-1%3A3d31b21c-01a0-4da2-8827-4bc6e88b7618%2Ficon-white.svg';
+const GLITCH_ICON = 'https://cdn.glitch.com/2442c68d-7b6d-4b69-9d13-feab530aa88e%2Fglitch-icon.svg?1489773457908';
+const GRAY_ICON = 'https://cdn.hyperdev.com/us-east-1%3A3d31b21c-01a0-4da2-8827-4bc6e88b7618%2Ficon-gray.svg';
+const WHITE_ICON = 'https://cdn.hyperdev.com/us-east-1%3A3d31b21c-01a0-4da2-8827-4bc6e88b7618%2Ficon-white.svg';
+const BLACK_ICON = 'https://cdn.hyperdev.com/us-east-1%3A3d31b21c-01a0-4da2-8827-4bc6e88b7618%2Ficon-black.svg';
 
-var WHITE_ICON = 'https://cdn.hyperdev.com/us-east-1%3A3d31b21c-01a0-4da2-8827-4bc6e88b7618%2Ficon-white.svg';
-var BLACK_ICON = 'https://cdn.hyperdev.com/us-east-1%3A3d31b21c-01a0-4da2-8827-4bc6e88b7618%2Ficon-black.svg';
-
+function trelloAlert(t,alertMsg){
+  t.alert({
+    message: alertMsg
+  });
+}
 
 var boardButtonCallback = function(t){
   return t.popup({
@@ -61,23 +64,29 @@ var boardButtonCallback = function(t){
   });
 };
 
-var onBtnClick = function (t, opts) {
-  t.alert({
-    message: 'Someone clicked the button'
-  })
-};
-
 TrelloPowerUp.initialize({
   'card-buttons': function (t, opts) {
     return [{
-      icon: 'https://cdn.hyperdev.com/us-east-1%3A3d31b21c-01a0-4da2-8827-4bc6e88b7618%2Ficon-gray.svg',
-      text: 'Open Popup',
+      icon: GRAY_ICON,
+      text: 'Open Popup Sample (Hello World)',
       callback: function(t) {
-          t.alert({
-            message: 'Hello World!'
-          })
+        trelloAlert(t,'Hello World!');
       },
       condition: 'always'
+    }, {
+      // but of course, you could also just kick off to a url if that's your thing
+      icon: GRAY_ICON,
+      text: 'google state check',
+      condition: 'always',
+      callback: function(t) {
+        trelloAlert(t,'Is Oauth loaded: '+isOauthLoad + "\nIs Logged: " + isOauth);
+      }
+    }, {
+      // but of course, you could also just kick off to a url if that's your thing
+      icon: GRAY_ICON,
+      text: 'Google Login',
+      condition: 'always',
+      callback: onOauthClick
     }];
   },
   'board-buttons': function(t, options){
@@ -97,9 +106,141 @@ TrelloPowerUp.initialize({
     }, {
       // we can either provide a button that has a callback function
       icon: WHITE_ICON,
-      text: 'Callback',
-      callback: onBtnClick,
+      text: 'Google Login',
+      callback: onOauthClick,
+      condition: 'edit'
+    }, {
+      // we can either provide a button that has a callback function
+      icon: WHITE_ICON,
+      text: 'Show Future Events',
+      callback: onEventListClick,
       condition: 'edit'
     }];
   },
 });
+
+
+
+//Google Stuff
+var onOauthClick = function handleAuthClick(t) {
+  tokenClient.callback = async (resp) => {
+    if (resp.error !== undefined) {
+      console.log('login error');
+      trelloAlert(t,'google login error');
+      throw (resp);
+    }
+    console.log('login success');
+    trelloAlert(t,'google login success');
+    isOauth = true;
+  };
+
+  if (gapi.client.getToken() === null) {
+    // Prompt the user to select a Google Account and ask for consent to share their data
+    // when establishing a new session.
+    tokenClient.requestAccessToken({prompt: 'consent'});
+  } else {
+    // Skip display of account chooser and consent dialog for an existing session.
+    tokenClient.requestAccessToken({prompt: ''});
+  }
+}
+
+var onEventListClick = async function googleCalendarEventList(t) {
+  if(!(isOauthLoad&&isOauth)){
+    trelloAlert(t,'Google account did not logged or Google service is not ready')
+    return;
+  }
+  let response;
+  try {
+    //put parameters in the request https://developers.google.com/calendar/api/v3/reference/events/list#python
+    const request = {
+      'calendarId': 'primary',
+      'timeMin': (new Date()).toISOString(),
+      'showDeleted': false,
+      'singleEvents': true,
+      'maxResults': 10,
+      'orderBy': 'startTime',
+    };
+    response = await gapi.client.calendar.events.list(request);
+  } catch (err) {
+    trelloAlert(t,err.message);
+    return;
+  }
+  //check response for which part to use https://developers.google.com/calendar/api/v3/reference/events/list#python
+  const events = response.result.items;
+  if (!events || events.length == 0) {
+    document.getElementById('content').innerText = 'No events found.';
+    return;
+  }
+  // Flatten to string to display
+  const output = events.reduce(
+      (str, event) => `${str}${event.summary} (${event.start.dateTime || event.start.date})\n`,
+      'Events:\n');
+  trelloAlert(t,output);
+}
+
+async function googleCalendarEventCreate(a,b,c,d) {
+  console.log("CreateSubmit click")
+  console.log(!a?!a:a);
+  console.log(!b?!b:b);
+  if(!c){
+    if(d)
+      c = d;
+    else{
+      var currentdate = new Date(); 
+      // c = currentdate.toISOString().slice(0, -8)+':00.000Z';
+      c = currentdate.toISOString();
+    }
+  }
+  else c = new Date(Date.parse(c)).toISOString();
+  if(!d){
+    d = c;
+  }else d = new Date(Date.parse(d)).toISOString();
+
+  const e = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  console.log(!c?!c:c);
+  console.log(!d?!d:d);
+
+  console.log(e);
+  document.getElementById('create_event_form').style.display = 'none';
+  console.log("CreateSubmit click done")
+
+  let response;
+  try {
+    //put parameters in the request https://developers.google.com/calendar/api/v3/reference/events/list#python
+    const request = {
+      'calendarId': 'primary',
+      "summary": a,
+      "description": b,
+      "start": {
+        "dateTime": c,
+        "timeZone": e
+      },
+      "end": {
+        "dateTime":d,
+        "timeZone":e
+      },
+    };
+    response = await gapi.client.calendar.events.insert(request);
+  } catch (err) {
+    console.log(err);
+    document.getElementById('content').innerText = err.status;
+    return;
+  }
+  //check response for which part to use https://developers.google.com/calendar/api/v3/reference/events/list#python
+  const id = response.result.id;
+  console.log(response.result.id);
+  if (!id || id<=0) {
+    const error = response.result.error;
+    console.log(response.result.error);
+
+    if(!error)
+      document.getElementById('content').innerText = 'Error. No error code found.';
+    document.getElementById('content').innerText = 'Error. '+error.code+'\n'+error.message;
+    return;
+  }
+  // Flatten to string to display
+  const output = response.result.id+' '+response.result.summary+' '+response.result.description;
+  console.log(output);
+
+  document.getElementById('content').innerText = output;
+}
