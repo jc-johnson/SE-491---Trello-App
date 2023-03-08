@@ -3,26 +3,24 @@
   <head>
     <meta charset="utf-8"/>
     <title>My First Trello Power Up</title>
-    <link rel="stylesheet" href="src/styles/styles.css" />
+    <link rel="stylesheet" href="src/css/styles.css" />
   </head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-JBQ7TM4Z6G"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-JBQ7TM4Z6G');
+  </script>
   <body>
     <script src="https://p.trellocdn.com/power-up.min.js" crossorigin="anonymous"></script>
-    <script>
-      window.TrelloPowerUp.initialize({
-        'card-buttons': function (t, opts) {
-          return [{
-            icon: 'https://cdn.hyperdev.com/us-east-1%3A3d31b21c-01a0-4da2-8827-4bc6e88b7618%2Ficon-gray.svg',
-            text: 'Open Popup',
-            callback: function(t) {
-                t.alert({
-                  message: 'Hello World!'
-                })
-            },
-            condition: 'always'
-          }];
-        }
-      });
-    </script> 
+    <script src="src/js/values.js">   </script> 
+    <script src="src/js/googleBasic.js">   </script> 
+    <script src="src/js/client.js">   </script> 
     <h1>Hello, World!</h1>
+    <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
+    <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
   </body>
 </html>

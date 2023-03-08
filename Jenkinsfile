@@ -4,10 +4,20 @@ pipeline {
 	
 	stages {
 
-		stage(“build”) {
+		stage(“clone”) {
 					
 			steps {
-				echo 'building the application...'
+				echo 'Cloning from git'
+				checkout([$class: 'GitSCM', branches: [[name: '*/main']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/jc-johnson/SE-491---Trello-App.git']]])
+			}
+		}
+				
+		stage(“config”) {
+				
+			steps {
+				nodejs(nodeJSInstallationName: 'NodeInstance') {
+                    			sh 'npm config ls'
+                		}
 			}
 		}
 				
@@ -15,13 +25,9 @@ pipeline {
 					
 			steps {
 				echo 'testing the application...'
-			}
-		}
-				
-		stage(“deploy”) {
-					
-			steps {
-				echo 'deploying the application...'
+				nodejs(nodeJSInstallationName: 'NodeInstance') {
+                    			sh 'npm test'
+                		}
 			}
 		}
 	}
