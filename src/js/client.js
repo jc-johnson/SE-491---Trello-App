@@ -84,9 +84,9 @@ TrelloPowerUp.initialize({
     }, {
       // but of course, you could also just kick off to a url if that's your thing
       icon: GRAY_ICON,
-      text: 'Google Login',
+      text: 'test Date popUp',
       condition: 'always',
-      callback: onOauthClick
+      callback: datePopTest
     }];
   },
   'board-buttons': function(t, options){
@@ -176,6 +176,20 @@ var onEventListClick = async function googleCalendarEventList(t) {
       (str, event) => `${str}${event.summary} (${event.start.dateTime || event.start.date})\n`,
       'Events:\n');
   trelloAlert(t,output);
+}
+var datePopTest = function handleAuthClick(t) {
+  console.log("card info");
+  t.card('all').then(function (card) {
+    console.log(JSON.stringify(card, null, 2));
+  });
+  console.log("card end");
+  new t.popup({
+    type: 'datetime',
+    title: String,
+    callback: function(t, opts){console.log(opts.date)} ,// opts.date is an ISOString
+    date: new Date(),
+    minDate: new Date(),
+  })
 }
 
 async function googleCalendarEventCreate(a,b,c,d) {
