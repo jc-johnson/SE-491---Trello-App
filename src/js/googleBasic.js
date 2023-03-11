@@ -31,5 +31,6 @@ function maybeEnableButtons() {
       isOauthLoad = true;
     }
 }
+export { maybeEnableButtons, gisLoaded, initializeGapiClient, gapiLoaded, gisInited, gapiInited};
 
 
