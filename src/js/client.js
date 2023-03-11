@@ -126,7 +126,16 @@ function googleCalendarAuth(t) {
         break;
       case 1:
         console.log('delete action');
-        removeEvent(t);
+        t.loadSecret(currentCard.id).then(function (secret) {
+          console.log(secret);
+          if(!secret){
+            console.log('eventID not found');
+            trelloAlert(t,'Calendar Event not Found');
+            calendarAction = -1;
+            return;
+          }
+          removeEvent(t, secret);
+        });
         break;
       default:
         console.log('Calendar Action not match '+calendarAction);
@@ -216,19 +225,9 @@ var dateCallback = function(t, opts){
   // console.log(content);
   googleCalendarAuth(t);
 }
-async function removeEvent(t) {
-  let eventID;
-  t.loadSecret(currentCard.id).then(function (secret) {
-    eventID = secret;
-  });
-  console.log(eventID);
-  if(!eventID){
-    console.log('eventID not found');
-    trelloAlert(t,'Calendar Event not Found');
-    calendarAction = -1;
-    return;
-  }
-  console.log("Waiting for response")
+async function removeEvent(t, eventID) {
+
+  console.log("remove event "+eventID);
 
   let response;
   try {
