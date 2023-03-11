@@ -194,6 +194,13 @@ var datecallback = function(t, opts){
   console.log(currentCard);
   console.log(opts.date);
   console.log(123);
+  let id = currentCard.id;
+  let title = currentCard.name;
+  let content = currentCard.desc;
+  console.log(id);
+  console.log(title);
+  console.log(content);
+
 }
 
 async function googleCalendarEventCreate(a,b,c,d) {
