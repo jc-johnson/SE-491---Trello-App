@@ -9,3 +9,6 @@ const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/calendar/v3/
 let tokenClient;
 let isOauth = false;
 let isOauthLoad = false;
+let currentCard ;
+let selectTime ;
+let calendarAction ;
