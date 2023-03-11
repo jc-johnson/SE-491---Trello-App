@@ -133,7 +133,7 @@ function googleCalendarAuth(t) {
   }
 }
 
-async function(t) {
+async function getEventList(t) {
   if(!(isOauthLoad&&isOauth)){
     trelloAlert(t,'Google account did not logged or Google service is not ready')
     return;
