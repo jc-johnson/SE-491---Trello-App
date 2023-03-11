@@ -177,7 +177,8 @@ var onEventListClick = async function googleCalendarEventList(t) {
       'Events:\n');
   trelloAlert(t,output);
 }
-var datePopTest = function handleAuthClick(t) {
+
+var datePopTest = function(t) {
   console.log("card info");
   t.card('all').then(function (card) {
     console.log(JSON.stringify(card, null, 2));
@@ -186,10 +187,13 @@ var datePopTest = function handleAuthClick(t) {
   new t.popup({
     type: 'datetime',
     title: String,
-    callback: function(t, opts){console.log(opts.date)} ,// opts.date is an ISOString
+    callback:  datecallback ,// opts.date is an ISOString
     date: new Date(),
     minDate: new Date(),
   })
+}
+var datecallback = function(t, opts){
+  console.log(opts.date);
 }
 
 async function googleCalendarEventCreate(a,b,c,d) {
