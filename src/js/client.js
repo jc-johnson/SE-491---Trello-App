@@ -103,18 +103,6 @@ TrelloPowerUp.initialize({
       text: 'URL',
       url: 'https://trello.com/inspiration',
       target: 'Inspiring Boards' // optional target for above url
-    }, {
-      // we can either provide a button that has a callback function
-      icon: WHITE_ICON,
-      text: 'Google Login',
-      callback: onOauthClick,
-      condition: 'edit'
-    }, {
-      // we can either provide a button that has a callback function
-      icon: WHITE_ICON,
-      text: 'Show Future Events',
-      callback: onEventListClick,
-      condition: 'edit'
     }];
   },
 });
@@ -122,7 +110,7 @@ TrelloPowerUp.initialize({
 
 
 //Google Stuff
-var onOauthClick = function(t) {
+function googleCalendarAuth(t) {
   tokenClient.callback = async (resp) => {
     if (resp.error !== undefined) {
       console.log('login error');
@@ -132,6 +120,7 @@ var onOauthClick = function(t) {
     console.log('login success');
     trelloAlert(t,'google login success');
     isOauth = true;
+    googleCalendarEventCreate(t);
   };
 
   if (gapi.client.getToken() === null) {
@@ -144,7 +133,7 @@ var onOauthClick = function(t) {
   }
 }
 
-var onEventListClick = async function(t) {
+async function(t) {
   if(!(isOauthLoad&&isOauth)){
     trelloAlert(t,'Google account did not logged or Google service is not ready')
     return;
@@ -177,7 +166,7 @@ var onEventListClick = async function(t) {
       'Events:\n');
   trelloAlert(t,output);
 }
-var currentCard ;
+
 var datePopTest = function(t) {
   console.log("card info");
   t.card('all').then(function (card) {
@@ -191,58 +180,32 @@ var datePopTest = function(t) {
   })
 }
 var datecallback = function(t, opts){
-  console.log(currentCard);
-  console.log(opts.date);
-  console.log(123);
-  let id = currentCard.id;
-  let title = currentCard.name;
-  let content = currentCard.desc;
-  console.log(id);
-  console.log(title);
-  console.log(content);
-
+  selectTime = opts.date;
+  googleCalendarAuth(t);
 }
 
-async function googleCalendarEventCreate(a,b,c,d) {
-  console.log("CreateSubmit click")
-  console.log(!a?!a:a);
-  console.log(!b?!b:b);
-  if(!c){
-    if(d)
-      c = d;
-    else{
-      var currentdate = new Date(); 
-      // c = currentdate.toISOString().slice(0, -8)+':00.000Z';
-      c = currentdate.toISOString();
-    }
-  }
-  else c = new Date(Date.parse(c)).toISOString();
-  if(!d){
-    d = c;
-  }else d = new Date(Date.parse(d)).toISOString();
+async function googleCalendarEventCreate(t) {
+  console.log("googleCalendarEventCreate")
 
-  const e = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  console.log(!c?!c:c);
-  console.log(!d?!d:d);
-
-  console.log(e);
+  const timeZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  console.log(timeZ);
   document.getElementById('create_event_form').style.display = 'none';
-  console.log("CreateSubmit click done")
+  console.log("Waiting for response")
 
   let response;
   try {
     //put parameters in the request https://developers.google.com/calendar/api/v3/reference/events/list#python
     const request = {
       'calendarId': 'primary',
-      "summary": a,
-      "description": b,
+      "summary": currentCard.name,
+      "description":  currentCard.url,
       "start": {
-        "dateTime": c,
-        "timeZone": e
+        "dateTime": selectTime,
+        "timeZone": timeZ
       },
       "end": {
-        "dateTime":d,
-        "timeZone":e
+        "dateTime":selectTime,
+        "timeZone":timeZ
       },
     };
     response = await gapi.client.calendar.events.insert(request);
@@ -259,13 +222,13 @@ async function googleCalendarEventCreate(a,b,c,d) {
     console.log(response.result.error);
 
     if(!error)
-      document.getElementById('content').innerText = 'Error. No error code found.';
-    document.getElementById('content').innerText = 'Error. '+error.code+'\n'+error.message;
+      trelloAlert(t,'Error. No error code found.');
+    trelloAlert(t,'Error. '+error.code+'\n'+error.message);
     return;
   }
   // Flatten to string to display
   const output = response.result.id+' '+response.result.summary+' '+response.result.description;
   console.log(output);
 
-  document.getElementById('content').innerText = output;
+  trelloAlert(t,output);
 }
