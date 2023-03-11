@@ -211,7 +211,7 @@ async function insertEvent(t) {
     response = await gapi.client.calendar.events.insert(request);
   } catch (err) {
     console.log(err);
-    document.getElementById('content').innerText = err.status;
+    trelloAlert(t,err.status);
     return;
   }
   //check response for which part to use https://developers.google.com/calendar/api/v3/reference/events/list#python
