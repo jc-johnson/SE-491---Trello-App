@@ -200,12 +200,6 @@ var removeEventClick = function(t) {
 
 var dateCallback = function(t, opts){
   selectTime = opts.date;
-  let id = currentCard.id;
-  let title = currentCard.name;
-  let content = currentCard.desc;
-  console.log(id);
-  console.log(title);
-  console.log(content);
   calendarAction = 0;
   googleCalendarAuth(t);
 }
