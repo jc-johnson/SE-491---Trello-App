@@ -193,6 +193,12 @@ var removeEventClick = function(t) {
   t.card('all').then(function (card) {
     currentCard = card;
   });
+  let id = currentCard.id;
+  let title = currentCard.name;
+  let content = currentCard.desc;
+  console.log(id);
+  console.log(title);
+  console.log(content);
   // console.log("card end");
   calendarAction = 1;
   googleCalendarAuth(t);
