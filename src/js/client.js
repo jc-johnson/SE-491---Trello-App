@@ -185,7 +185,7 @@ var datePopTest = function(t) {
   // });
   // console.log("card end");
   t.popup({
-    type: 'date' | 'datetime',
+    type: 'datetime',
     title: 'Event Meeting Time',
     callback:  datecallback ,// opts.date is an ISOString
   })
