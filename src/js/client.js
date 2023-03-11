@@ -193,12 +193,12 @@ var removeEventClick = function(t) {
   t.card('all').then(function (card) {
     currentCard = card;
   });
-  let id = currentCard.id;
-  let title = currentCard.name;
-  let content = currentCard.desc;
-  console.log(id);
-  console.log(title);
-  console.log(content);
+  // let id = currentCard.id;
+  // let title = currentCard.name;
+  // let content = currentCard.desc;
+  // console.log(id);
+  // console.log(title);
+  // console.log(content);
   // console.log("card end");
   calendarAction = 1;
   googleCalendarAuth(t);
@@ -206,18 +206,19 @@ var removeEventClick = function(t) {
 
 var dateCallback = function(t, opts){
   selectTime = opts.date;
+  t.closePopup();
   calendarAction = 0;
-  let id = currentCard.id;
-  let title = currentCard.name;
-  let content = currentCard.desc;
-  console.log(id);
-  console.log(title);
-  console.log(content);
+  // let id = currentCard.id;
+  // let title = currentCard.name;
+  // let content = currentCard.desc;
+  // console.log(id);
+  // console.log(title);
+  // console.log(content);
   googleCalendarAuth(t);
 }
 async function removeEvent(t) {
   let eventID;
-  t.loadSecret('token').then(function (secret) {
+  t.loadSecret(currentCard.id).then(function (secret) {
     eventID = secret;
   });
   console.log(eventID);
@@ -291,8 +292,8 @@ async function insertEvent(t) {
   }
   // Flatten to string to display
   t.storeSecret(currentCard.id,response.result.id);
+  console.log(currentCard);
   console.log(response.result);
-
   trelloAlert(t,'Event Create');
   calendarAction = -1;
 }
