@@ -157,7 +157,7 @@ var getEventList = async function(t) {
   //check response for which part to use https://developers.google.com/calendar/api/v3/reference/events/list#python
   const events = response.result.items;
   if (!events || events.length == 0) {
-    document.getElementById('content').innerText = 'No events found.';
+    trelloAlert(t,'No events found.');
     return;
   }
   // Flatten to string to display
@@ -189,7 +189,6 @@ async function insertEvent(t) {
 
   const timeZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
   console.log(timeZ);
-  document.getElementById('create_event_form').style.display = 'none';
   console.log("Waiting for response")
 
   let response;
