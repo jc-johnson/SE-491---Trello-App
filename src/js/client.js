@@ -204,8 +204,11 @@ var dateCallback = function(t, opts){
   googleCalendarAuth(t);
 }
 async function removeEvent(t) {
-  let eventID = t.loadSecret(currentCard.id);
-  console.log('event id '+eventID);
+  let eventID;
+  t.loadSecret('token').then(function (secret) {
+    eventID = secret;
+  });
+  console.log(eventID);
   if(!eventID){
     console.log('eventID not found');
     trelloAlert(t,'Calendar Event not Found');
