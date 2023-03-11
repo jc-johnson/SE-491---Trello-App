@@ -132,7 +132,7 @@ function googleCalendarAuth(t) {
     tokenClient.requestAccessToken({prompt: ''});
   }
 }
-
+var abs = "asd";
 var getEventList = async function(t) {
   if(!(isOauthLoad&&isOauth)){
     trelloAlert(t,'Google account did not logged or Google service is not ready')
@@ -211,6 +211,7 @@ async function insertEvent(t) {
     response = await gapi.client.calendar.events.insert(request);
   } catch (err) {
     console.log(err);
+    abs = 123124213;
     trelloAlert(t,err.status);
     return;
   }
