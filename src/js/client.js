@@ -188,9 +188,9 @@ var datePopTest = function(t) {
     type: 'date' | 'datetime',
     title: 'Event Meeting Time',
     callback:  datecallback ,// opts.date is an ISOString
-    date: new Date(),
-    minDate: new Date(),
-    maxDate: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
+    date: new Date().toISOString(),
+    minDate: new Date().toISOString(),
+    maxDate: new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString(),
   })
 }
 var datecallback = function(t, opts){
