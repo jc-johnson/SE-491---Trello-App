@@ -180,10 +180,10 @@ var onEventListClick = async function googleCalendarEventList(t) {
 
 var datePopTest = function(t) {
   console.log("card info");
-  t.card('all').then(function (card) {
-    console.log(JSON.stringify(card, null, 2));
-  });
-  console.log("card end");
+  // t.card('all').then(function (card) {
+  //   console.log(JSON.stringify(card, null, 2));
+  // });
+  // console.log("card end");
   new t.popup({
     type: 'datetime',
     title: String,
