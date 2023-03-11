@@ -211,6 +211,7 @@ var dateCallback = function(t, opts){
 }
 async function removeEvent(t) {
   let eventID = t.loadSecret(currentCard.id);
+  console.log('event id '+eventID);
   if(!eventID){
     console.log('eventID not found');
     trelloAlert(t,'Calendar Event not Found');
@@ -226,7 +227,7 @@ async function removeEvent(t) {
       'calendarId': 'primary',
       "eventId": eventID,
     };
-    response = await gapi.client.calendar.events.insert(request);
+    response = await gapi.client.calendar.events.delete(request);
   } catch (err) {
     console.log(err);
     trelloAlert(t,err.status);
