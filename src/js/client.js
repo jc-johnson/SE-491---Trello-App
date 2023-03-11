@@ -186,10 +186,11 @@ var datePopTest = function(t) {
   // console.log("card end");
   new t.popup({
     type: 'date' | 'datetime',
-    title: String,
+    title: 'Event Meeting Time',
     callback:  datecallback ,// opts.date is an ISOString
     date: new Date(),
     minDate: new Date(),
+    maxDate: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
   })
 }
 var datecallback = function(t, opts){
