@@ -191,7 +191,7 @@ var datePopTest = function(t) {
   })
 }
 var datecallback = function(t, opts){
-  console.log(card);
+  console.log(currentCard);
   console.log(opts.date);
 }
 
