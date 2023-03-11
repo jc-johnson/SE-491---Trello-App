@@ -122,7 +122,7 @@ TrelloPowerUp.initialize({
 
 
 //Google Stuff
-var onOauthClick = function handleAuthClick(t) {
+var onOauthClick = function(t) {
   tokenClient.callback = async (resp) => {
     if (resp.error !== undefined) {
       console.log('login error');
@@ -144,7 +144,7 @@ var onOauthClick = function handleAuthClick(t) {
   }
 }
 
-var onEventListClick = async function googleCalendarEventList(t) {
+var onEventListClick = async function(t) {
   if(!(isOauthLoad&&isOauth)){
     trelloAlert(t,'Google account did not logged or Google service is not ready')
     return;
@@ -184,7 +184,7 @@ var datePopTest = function(t) {
   //   console.log(JSON.stringify(card, null, 2));
   // });
   // console.log("card end");
-  new t.popup({
+  t.popup({
     type: 'date' | 'datetime',
     title: 'Event Meeting Time',
     callback:  datecallback ,// opts.date is an ISOString
