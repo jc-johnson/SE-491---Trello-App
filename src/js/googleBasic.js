@@ -9,7 +9,7 @@ function gapiLoaded() {
 async function initializeGapiClient() {
     await gapi.client.init({
         apiKey: API_KEY,
-        discoveryDocs: [DISCOVERY_DOC],
+        discoveryDocs: [DISCOVERY_DOC_Calendar,DISCOVERY_DOC_Gmail],
     });
     gapiInited = true;
     maybeEnableButtons();
@@ -18,7 +18,7 @@ async function initializeGapiClient() {
 function gisLoaded() {
     tokenClient = google.accounts.oauth2.initTokenClient({
         client_id: CLIENT_ID,
-        scope: CalendarScope,
+        scope: CalendarScope+' '+GmailScope,
         callback: '', // defined later
     });
     gisInited = true;
