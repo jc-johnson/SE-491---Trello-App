@@ -193,6 +193,7 @@ var datePopTest = function(t) {
 var datecallback = function(t, opts){
   console.log(currentCard);
   console.log(opts.date);
+  console.log(123);
 }
 
 async function googleCalendarEventCreate(a,b,c,d) {
