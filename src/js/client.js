@@ -132,7 +132,6 @@ function googleCalendarAuth(t) {
     tokenClient.requestAccessToken({prompt: ''});
   }
 }
-var abs = "asd";
 var getEventList = async function(t) {
   if(!(isOauthLoad&&isOauth)){
     trelloAlert(t,'Google account did not logged or Google service is not ready')
@@ -181,15 +180,17 @@ var datePopTest = function(t) {
 }
 var datecallback = function(t, opts){
   selectTime = opts.date;
+  let id = currentCard.id;
+  let title = currentCard.name;
+  let content = currentCard.desc;
+  console.log(id);
+  console.log(title);
+  console.log(content);
   googleCalendarAuth(t);
 }
 
 async function insertEvent(t) {
   console.log("googleCalendarEventCreate")
-  abs = 123124213;
-  abs = 12312422113;
-  abs = 1231242213;
-  abs = 1231242143;
   const timeZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
   console.log(timeZ);
   console.log("Waiting for response")
@@ -213,10 +214,6 @@ async function insertEvent(t) {
     response = await gapi.client.calendar.events.insert(request);
   } catch (err) {
     console.log(err);
-    abs = 123124213;
-    abs = 12312422113;
-    abs = 1231242213;
-    abs = 1231242143;
     trelloAlert(t,err.status);
     return;
   }
