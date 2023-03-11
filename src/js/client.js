@@ -211,6 +211,9 @@ async function insertEvent(t) {
   } catch (err) {
     console.log(err);
     abs = 123124213;
+    abs = 12312422113;
+    abs = 1231242213;
+    abs = 1231242143;
     trelloAlert(t,err.status);
     return;
   }
