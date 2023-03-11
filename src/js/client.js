@@ -106,7 +106,6 @@ TrelloPowerUp.initialize({
 });
 
 
-
 //Google Stuff
 function googleCalendarAuth(t) {
   tokenClient.callback = async (resp) => {
@@ -202,13 +201,6 @@ var removeEventClick = function(t) {
   t.card('all').then(function (card) {
     currentCard = card;
   });
-  // let id = currentCard.id;
-  // let title = currentCard.name;
-  // let content = currentCard.desc;
-  // console.log(id);
-  // console.log(title);
-  // console.log(content);
-  // console.log("card end");
   calendarAction = 1;
   googleCalendarAuth(t);
 }
@@ -217,18 +209,10 @@ var dateCallback = function(t, opts){
   selectTime = opts.date;
   t.closePopup();
   calendarAction = 0;
-  // let id = currentCard.id;
-  // let title = currentCard.name;
-  // let content = currentCard.desc;
-  // console.log(id);
-  // console.log(title);
-  // console.log(content);
   googleCalendarAuth(t);
 }
 async function removeEvent(t, eventID) {
-
   console.log("remove event "+eventID);
-
   let response;
   try {
     //put parameters in the request https://developers.google.com/calendar/api/v3/reference/events/list#python
@@ -243,11 +227,14 @@ async function removeEvent(t, eventID) {
     return;
   }
   //check response for which part to use https://developers.google.com/calendar/api/v3/reference/events/list#python
-  console.log(response.result);
-  t.clearSecret(currentCard.id);
-
-  trelloAlert(t,'Event Delete');
   calendarAction = -1;
+
+  if (!response.result) {
+    console.log(response.result);
+    t.clearSecret(currentCard.id);
+    trelloAlert(t,'Event Delete');
+  }
+  else trelloAlert(t,'Error. '+error.code+'\n'+error.message);
 }
 
 async function insertEvent(t) {
