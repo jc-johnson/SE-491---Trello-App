@@ -120,7 +120,7 @@ function googleCalendarAuth(t) {
     console.log('login success');
     trelloAlert(t,'google login success');
     isOauth = true;
-    googleCalendarEventCreate(t);
+    insertEvent(t);
   };
 
   if (gapi.client.getToken() === null) {
@@ -133,7 +133,7 @@ function googleCalendarAuth(t) {
   }
 }
 
-async function getEventList(t) {
+var getEventList = async function(t) {
   if(!(isOauthLoad&&isOauth)){
     trelloAlert(t,'Google account did not logged or Google service is not ready')
     return;
@@ -184,7 +184,7 @@ var datecallback = function(t, opts){
   googleCalendarAuth(t);
 }
 
-async function googleCalendarEventCreate(t) {
+async function insertEvent(t) {
   console.log("googleCalendarEventCreate")
 
   const timeZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
