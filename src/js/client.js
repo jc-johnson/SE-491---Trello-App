@@ -76,17 +76,15 @@ TrelloPowerUp.initialize({
     }, {
       // but of course, you could also just kick off to a url if that's your thing
       icon: GRAY_ICON,
-      text: 'google state check',
+      text: 'Insert into Google Calendar',
       condition: 'always',
-      callback: function(t) {
-        trelloAlert(t,'Is Oauth loaded: '+isOauthLoad + "\nIs Logged: " + isOauth);
-      }
+      callback: insertEventClick
     }, {
       // but of course, you could also just kick off to a url if that's your thing
       icon: GRAY_ICON,
-      text: 'test Date popUp',
+      text: 'Remove Google Calendar Event',
       condition: 'always',
-      callback: datePopTest
+      callback: removeEventClick
     }];
   },
   'board-buttons': function(t, options){
@@ -120,13 +118,26 @@ function googleCalendarAuth(t) {
     console.log('login success');
     trelloAlert(t,'google login success');
     isOauth = true;
-    insertEvent(t);
+    
+    switch (calendarAction){
+      case 0:
+        console.log('insert action');
+        insertEvent(t);
+        break;
+      case 1:
+        console.log('delete action');
+        removeEvent(t);
+        break;
+      default:
+        console.log('Calendar Action not match '+calendarAction);
+    }
   };
 
   if (gapi.client.getToken() === null) {
     // Prompt the user to select a Google Account and ask for consent to share their data
     // when establishing a new session.
-    tokenClient.requestAccessToken({prompt: 'consent'});
+    tokenClient.requestAccessToken({prompt: ''});//disable now for fast testing
+    // tokenClient.requestAccessToken({prompt: 'consent'}); 
   } else {
     // Skip display of account chooser and consent dialog for an existing session.
     tokenClient.requestAccessToken({prompt: ''});
@@ -166,7 +177,7 @@ var getEventList = async function(t) {
   trelloAlert(t,output);
 }
 
-var datePopTest = function(t) {
+var insertEventClick = function(t) {
   console.log("card info");
   t.card('all').then(function (card) {
     currentCard = card;
@@ -174,11 +185,20 @@ var datePopTest = function(t) {
   // console.log("card end");
   t.popup({
     type: 'datetime',
-    title: 'Event Meeting Time',
-    callback:  datecallback ,// opts.date is an ISOString
+    title: 'Setup Calendar Event Time',
+    callback:  dateCallback ,// opts.date is an ISOString
   })
 }
-var datecallback = function(t, opts){
+var removeEventClick = function(t) {
+  t.card('all').then(function (card) {
+    currentCard = card;
+  });
+  // console.log("card end");
+  calendarAction = 1;
+  googleCalendarAuth(t);
+}
+
+var dateCallback = function(t, opts){
   selectTime = opts.date;
   let id = currentCard.id;
   let title = currentCard.name;
@@ -186,11 +206,41 @@ var datecallback = function(t, opts){
   console.log(id);
   console.log(title);
   console.log(content);
+  calendarAction = 0;
   googleCalendarAuth(t);
+}
+async function removeEvent(t) {
+  let eventID = t.loadSecret(currentCard.id);
+  if(!eventID){
+    console.log('eventID not found');
+    trelloAlert(t,'Calendar Event not Found');
+    calendarAction = -1;
+    return;
+  }
+  console.log("Waiting for response")
+
+  let response;
+  try {
+    //put parameters in the request https://developers.google.com/calendar/api/v3/reference/events/list#python
+    const request = {
+      'calendarId': 'primary',
+      "eventId": eventID,
+    };
+    response = await gapi.client.calendar.events.insert(request);
+  } catch (err) {
+    console.log(err);
+    trelloAlert(t,err.status);
+    return;
+  }
+  //check response for which part to use https://developers.google.com/calendar/api/v3/reference/events/list#python
+  console.log(response.result);
+  t.clearSecret(currentCard.id);
+
+  trelloAlert(t,'Event Delete');
+  calendarAction = -1;
 }
 
 async function insertEvent(t) {
-  console.log("googleCalendarEventCreate")
   const timeZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
   console.log(timeZ);
   console.log("Waiting for response")
@@ -230,8 +280,9 @@ async function insertEvent(t) {
     return;
   }
   // Flatten to string to display
-  const output = response.result.id+' '+response.result.summary+' '+response.result.description;
-  console.log(output);
+  t.storeSecret(currentCard.id,response.result.id);
+  console.log(response.result);
 
-  trelloAlert(t,output);
+  trelloAlert(t,'Event Create');
+  calendarAction = -1;
 }
