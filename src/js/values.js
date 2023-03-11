@@ -9,5 +9,3 @@ const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/calendar/v3/
 let tokenClient;
 let isOauth = false;
 let isOauthLoad = false;
-
-export {CLIENT_ID, API_KEY, CalendarScope, DISCOVERY_DOC, tokenClient, isOauth, isOauthLoad};
