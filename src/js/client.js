@@ -177,12 +177,12 @@ var onEventListClick = async function(t) {
       'Events:\n');
   trelloAlert(t,output);
 }
-
+var currentCard ;
 var datePopTest = function(t) {
   console.log("card info");
-  // t.card('all').then(function (card) {
-  //   console.log(JSON.stringify(card, null, 2));
-  // });
+  t.card('all').then(function (card) {
+    currentCard = card;
+  });
   // console.log("card end");
   t.popup({
     type: 'datetime',
@@ -191,6 +191,7 @@ var datePopTest = function(t) {
   })
 }
 var datecallback = function(t, opts){
+  console.log(card);
   console.log(opts.date);
 }
 
