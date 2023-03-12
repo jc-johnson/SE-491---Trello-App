@@ -158,7 +158,10 @@ function googleAuth(t) {
     tokenClient.requestAccessToken({prompt: ''});
   }
 }
-var onGoogleLoginClick = googleAuth;
+var onGoogleLoginClick = function(t){
+  calendarAction = -1;
+  googleAuth(t);
+}
 
 var onGoogleLogoutClick = function(t){
     if (!isOauth){
@@ -172,6 +175,7 @@ var onGoogleLogoutClick = function(t){
         gapi.client.setToken('');
     } 
     isOauth = false;
+    calendarAction = -1;
     trelloAlert(t,'Logout Google.');
 
 }
