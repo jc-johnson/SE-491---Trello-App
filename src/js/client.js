@@ -108,7 +108,7 @@ TrelloPowerUp.initialize({
 
 
 //Google Stuff
-var onGoogleLoginClick = function googleAuth(t) {
+function googleAuth(t) {
   if (!isOauthLoad){
     console.log('google not load');
     trelloAlert(t,'Google Service Error. Please Try Later.');
@@ -158,6 +158,7 @@ var onGoogleLoginClick = function googleAuth(t) {
     tokenClient.requestAccessToken({prompt: ''});
   }
 }
+var onGoogleLoginClick = googleAuth;
 
 var onGoogleLogoutClick = function(t){
     if (!isOauth){
@@ -209,13 +210,13 @@ var dateCallback = function(t, opts){
   t.closePopup();
   calendarAction = 0;
   insertEvent(t) ;
-    let id = currentCard.id;
-  let title = currentCard.name;
-  let content = currentCard.desc;
-  console.log(id);
-  console.log(title);
-  console.log(content);
-  console.log("card end");
+  //   let id = currentCard.id;
+  // let title = currentCard.name;
+  // let content = currentCard.desc;
+  // console.log(id);
+  // console.log(title);
+  // console.log(content);
+  // console.log("card end");
 }
 async function removeEvent(t, eventID) {
   if(!isOauth){
