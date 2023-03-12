@@ -190,7 +190,7 @@ var dateCallback = function(t, opts){
   selectTime = opts.date;
   t.closePopup();
   calendarAction = 0;
-  insertEvent(t) ；
+  insertEvent(t) ;
 }
 async function removeEvent(t, eventID) {
   if(!isOauth){
