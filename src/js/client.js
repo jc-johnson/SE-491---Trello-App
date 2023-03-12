@@ -209,6 +209,13 @@ var dateCallback = function(t, opts){
   t.closePopup();
   calendarAction = 0;
   insertEvent(t) ;
+    let id = currentCard.id;
+  let title = currentCard.name;
+  let content = currentCard.desc;
+  console.log(id);
+  console.log(title);
+  console.log(content);
+  console.log("card end");
 }
 async function removeEvent(t, eventID) {
   if(!isOauth){
