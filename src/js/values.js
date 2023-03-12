@@ -11,4 +11,4 @@ let isOauth = false;
 let isOauthLoad = false;
 let currentCard ;
 let selectTime ;
-let calendarAction ;
+let calendarAction ;// 0 for insertCalendarEvent, 1 for removeCalendarEvent

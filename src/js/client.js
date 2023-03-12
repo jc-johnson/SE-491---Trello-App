@@ -95,19 +95,21 @@ TrelloPowerUp.initialize({
       text: 'Popup',
       callback: boardButtonCallback
     }, {
-      // or we can also have a button that is just a simple url
-      // clicking it will open a new tab at the provided url
       icon: WHITE_ICON,
-      text: 'URL',
-      url: 'https://trello.com/inspiration',
-      target: 'Inspiring Boards' // optional target for above url
+      text: 'Google Login',
+      callback: onGoogleLoginClick
     }];
   },
 });
 
 
 //Google Stuff
-function googleCalendarAuth(t) {
+function googleAuth(t) {
+  if (!isOauthLoad){
+    console.log('google not load');
+    trelloAlert(t,'Google Service Error. Please Try Later.');
+    return;
+  }
   tokenClient.callback = async (resp) => {
     if (resp.error !== undefined) {
       console.log('login error');
@@ -152,39 +154,8 @@ function googleCalendarAuth(t) {
     tokenClient.requestAccessToken({prompt: ''});
   }
 }
-var getEventList = async function(t) {
-  if(!(isOauthLoad&&isOauth)){
-    trelloAlert(t,'Google account did not logged or Google service is not ready')
-    return;
-  }
-  let response;
-  try {
-    //put parameters in the request https://developers.google.com/calendar/api/v3/reference/events/list#python
-    const request = {
-      'calendarId': 'primary',
-      'timeMin': (new Date()).toISOString(),
-      'showDeleted': false,
-      'singleEvents': true,
-      'maxResults': 10,
-      'orderBy': 'startTime',
-    };
-    response = await gapi.client.calendar.events.list(request);
-  } catch (err) {
-    trelloAlert(t,err.message);
-    return;
-  }
-  //check response for which part to use https://developers.google.com/calendar/api/v3/reference/events/list#python
-  const events = response.result.items;
-  if (!events || events.length == 0) {
-    trelloAlert(t,'No events found.');
-    return;
-  }
-  // Flatten to string to display
-  const output = events.reduce(
-      (str, event) => `${str}${event.summary} (${event.start.dateTime || event.start.date})\n`,
-      'Events:\n');
-  trelloAlert(t,output);
-}
+
+var onGoogleLoginClick = googleAuth;
 
 var insertEventClick = function(t) {
   console.log("card info");
@@ -203,16 +174,29 @@ var removeEventClick = function(t) {
     currentCard = card;
   });
   calendarAction = 1;
-  googleCalendarAuth(t);
+  t.loadSecret(currentCard.id).then(function (secret) {
+    console.log(secret);
+    if(!secret){
+      console.log('eventID not found');
+      trelloAlert(t,'Calendar Event not Found');
+      calendarAction = -1;
+      return;
+    }
+    removeEvent(t, secret);
+  });
 }
 
 var dateCallback = function(t, opts){
   selectTime = opts.date;
   t.closePopup();
   calendarAction = 0;
-  googleCalendarAuth(t);
+  insertEvent(t) ；
 }
 async function removeEvent(t, eventID) {
+  if(!isOauth){
+    googleAuth(t);
+    return;
+  }
   console.log("remove event "+eventID);
   let response;
   try {
@@ -224,7 +208,7 @@ async function removeEvent(t, eventID) {
     response = await gapi.client.calendar.events.delete(request);
   } catch (err) {
     console.log(err);
-    trelloAlert(t,err.status);
+    googleAuth(t);
     return;
   }
   //check response for which part to use https://developers.google.com/calendar/api/v3/reference/events/list#python
@@ -239,6 +223,10 @@ async function removeEvent(t, eventID) {
 }
 
 async function insertEvent(t) {
+  if(!isOauth){
+    googleAuth(t);
+    return;
+  }
   const timeZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
   console.log(timeZ);
   console.log("Waiting for response")
@@ -262,7 +250,7 @@ async function insertEvent(t) {
     response = await gapi.client.calendar.events.insert(request);
   } catch (err) {
     console.log(err);
-    trelloAlert(t,err.status);
+    googleAuth(t);
     return;
   }
   //check response for which part to use https://developers.google.com/calendar/api/v3/reference/events/list#python
