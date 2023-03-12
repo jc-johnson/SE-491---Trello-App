@@ -98,13 +98,17 @@ TrelloPowerUp.initialize({
       icon: WHITE_ICON,
       text: 'Google Login',
       callback: onGoogleLoginClick
+    }, {
+      icon: WHITE_ICON,
+      text: 'Google Logout',
+      callback: onGoogleLogoutClick
     }];
   },
 });
 
 
 //Google Stuff
-function googleAuth(t) {
+var onGoogleLoginClick = function googleAuth(t) {
   if (!isOauthLoad){
     console.log('google not load');
     trelloAlert(t,'Google Service Error. Please Try Later.');
@@ -155,7 +159,21 @@ function googleAuth(t) {
   }
 }
 
-var onGoogleLoginClick = googleAuth;
+var onGoogleLogoutClick = function(t){
+    if (!isOauth){
+      trelloAlert(t,'You did not login with Google.');
+      return;
+    }
+
+    const token = gapi.client.getToken();
+    if (token !== null) {
+        google.accounts.oauth2.revoke(token.access_token);
+        gapi.client.setToken('');
+    } 
+    isOauth = false;
+    trelloAlert(t,'Logout Google.');
+
+}
 
 var insertEventClick = function(t) {
   console.log("card info");
